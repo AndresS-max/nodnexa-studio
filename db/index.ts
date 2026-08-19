@@ -36,6 +36,12 @@ export function ensureDatabaseSchema(): Promise<void> {
       d1.prepare(
         "CREATE TABLE IF NOT EXISTS rate_limits (key TEXT PRIMARY KEY NOT NULL, window_started_at INTEGER NOT NULL, count INTEGER NOT NULL)",
       ),
+      d1.prepare(
+        "DELETE FROM feedback WHERE session_id = 'SECURITY_TEST_XSS' AND message LIKE '%SECURITY_TEST_STORED_INPUT%'",
+      ),
+      d1.prepare(
+        "DELETE FROM events WHERE session_id = 'SECURITY_TEST_FORGED_SESSION'",
+      ),
     ])
     .then(() => undefined)
     .catch((error) => {
